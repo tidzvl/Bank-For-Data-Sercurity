@@ -20,7 +20,7 @@ export default function Dashboard() {
       <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <span className="sidebar-logo">■</span>
-          <span className="sidebar-title">SecureApp</span>
+          <span className="sidebar-title">BM Bank</span>
         </div>
 
         <nav className="sidebar-nav">
@@ -50,7 +50,7 @@ export default function Dashboard() {
                 <line x1="18" y1="20" x2="18" y2="4"></line>
                 <line x1="6" y1="20" x2="6" y2="16"></line>
               </svg>
-              <span>Analytics</span>
+              <span>Phân tích</span>
             </a>
             <a href="#reports" className="nav-item">
               <svg
@@ -65,7 +65,7 @@ export default function Dashboard() {
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
               </svg>
-              <span>Reports</span>
+              <span>Báo cáo</span>
             </a>
             <a href="/transfer" className="nav-item">
               <svg
@@ -79,7 +79,7 @@ export default function Dashboard() {
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
               </svg>
-              <span>Chuyển dữ liệu</span>
+              <span>Chuyển tiền</span>
             </a>
             <a href="/accounts" className="nav-item">
               <svg
@@ -137,9 +137,9 @@ export default function Dashboard() {
                 <line x1="3" y1="18" x2="21" y2="18"></line>
               </svg>
             </button>
-            <span className="app-name">SecureApp</span>
+            <span className="app-name">BM Bank</span>
             <span className="navbar-separator">/</span>
-            <h1 className="page-title">Dashboard</h1>
+            <h1 className="page-title">Trang chủ</h1>
           </div>
           <div className="navbar-right">
             <button className="notification-btn">
@@ -156,7 +156,7 @@ export default function Dashboard() {
             </button>
             <div className="user-info">
               <div className="user-avatar">AU</div>
-              <span className="username">Admin User</span>
+              <span className="username">Tin dep trai</span>
             </div>
           </div>
         </header>
@@ -177,10 +177,10 @@ export default function Dashboard() {
                   >
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                   </svg>
-                  <span className="stat-label">Total Revenue</span>
+                  <span className="stat-label">Số dư</span>
                 </div>
-                <div className="stat-value">$127,450</div>
-                <div className="stat-change positive">+12.5%</div>
+                <div className="stat-value">127,450 VND</div>
+                <div className="stat-change positive">SINH LỜI MỖI NGÀY</div>
               </div>
               <div className="stat-card stat-card-small">
                 <div className="stat-header">
@@ -195,7 +195,7 @@ export default function Dashboard() {
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                   </svg>
-                  <span className="stat-label">Active Users</span>
+                  <span className="stat-label">Giao dịch</span>
                 </div>
                 <div className="stat-value">8,432</div>
                 <div className="stat-change positive">+5.2%</div>
@@ -206,15 +206,15 @@ export default function Dashboard() {
             <div className="row-2">
               <div className="chart-card">
                 <div className="chart-header">
-                  <h3>Monthly Comparison</h3>
+                  <h3>Kiểm soát thu chi</h3>
                   <div className="chart-legend">
                     <span className="legend-item">
                       <span className="legend-color legend-color-a"></span>
-                      Dataset A
+                      Tiền vào
                     </span>
                     <span className="legend-item">
                       <span className="legend-color legend-color-b"></span>
-                      Dataset B
+                      Tiền ra
                     </span>
                   </div>
                 </div>
@@ -266,16 +266,16 @@ export default function Dashboard() {
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
-                  <h3>Performance</h3>
+                  <h3>Tháng này</h3>
                 </div>
                 <div className="info-metrics">
                   <div className="metric-item">
-                    <span className="metric-label">Success Rate</span>
-                    <span className="metric-value">94.5%</span>
+                    <span className="metric-label">Tiền vào</span>
+                    <span className="metric-value">944,457,122 VND</span>
                   </div>
                   <div className="metric-item">
-                    <span className="metric-label">Completion</span>
-                    <span className="metric-value">87.2%</span>
+                    <span className="metric-label">Tiền ra</span>
+                    <span className="metric-value">872,144,555 VND</span>
                   </div>
                 </div>
               </div>
@@ -306,16 +306,16 @@ export default function Dashboard() {
                     <line x1="6" y1="6" x2="6.01" y2="6"></line>
                     <line x1="6" y1="18" x2="6.01" y2="18"></line>
                   </svg>
-                  <h3>System Status</h3>
+                  <h3>Trạng thái tài khoản</h3>
                 </div>
                 <div className="info-metrics">
                   <div className="metric-item">
-                    <span className="metric-label">Uptime</span>
-                    <span className="metric-value">99.9%</span>
+                    <span className="metric-label">Hạn mức</span>
+                    <span className="metric-value">10,000,000,000 VND</span>
                   </div>
                   <div className="metric-item">
-                    <span className="metric-label">Response Time</span>
-                    <span className="metric-value">45ms</span>
+                    <span className="metric-label">Đã sử dụng</span>
+                    <span className="metric-value">45%</span>
                   </div>
                 </div>
               </div>
@@ -326,55 +326,55 @@ export default function Dashboard() {
           <div className="column-b">
             {/* Notifications - 90% */}
             <div className="notifications-section">
-              <h3 className="section-title">Recent Notifications</h3>
+              <h3 className="section-title">Thông báo gần đây</h3>
               <div className="notifications-list">
                 {[
                   {
-                    icon: "user",
-                    type: "User Registration",
-                    change: "+15 users",
+                    icon: "dollar",
+                    type: "Biến động số dư",
+                    change: "+15,000 VND",
                     time: "2 min ago",
                   },
                   {
                     icon: "dollar",
-                    type: "Revenue Update",
-                    change: "+$2,450",
+                    type: "Biến động số dư",
+                    change: "-2,450 VND",
                     time: "15 min ago",
                   },
                   {
-                    icon: "file",
-                    type: "Report Generated",
-                    change: "Monthly Report",
+                    icon: "dollar",
+                    type: "Biến động số dư",
+                    change: "+1,000,000 VND",
                     time: "1 hour ago",
                   },
                   {
                     icon: "alert",
-                    type: "System Alert",
-                    change: "Low storage",
+                    type: "Cảnh báo đăng nhập",
+                    change: "Phát hiện nơi đăng nhập mới",
                     time: "2 hours ago",
                   },
                   {
                     icon: "check",
-                    type: "Task Completed",
-                    change: "Backup finished",
+                    type: "Sổ tiết kiệm",
+                    change: "Tạo mới sổ tiết kiệm thành công",
                     time: "3 hours ago",
                   },
                   {
-                    icon: "users",
-                    type: "Team Update",
-                    change: "+3 members",
+                    icon: "alert",
+                    type: "Cảnh báo đăng nhập",
+                    change: "Phát hiện nơi đăng nhập mới",
                     time: "5 hours ago",
                   },
                   {
-                    icon: "upload",
-                    type: "Data Upload",
-                    change: "Files synced",
+                    icon: "dollar",
+                    type: "Biến động số dư",
+                    change: "-127,043 VND",
                     time: "6 hours ago",
                   },
                   {
-                    icon: "shield",
-                    type: "Security Update",
-                    change: "Patch applied",
+                    icon: "dollar",
+                    type: "Biến động số dư",
+                    change: "+335,445 VND",
                     time: "8 hours ago",
                   },
                 ].map((notification, index) => (
@@ -479,14 +479,14 @@ export default function Dashboard() {
 
             {/* Users List - 10% */}
             <div className="users-section">
-              <h3 className="section-title">Team Members</h3>
+              <h3 className="section-title">Tài khoản đã lưu</h3>
               <div className="users-list">
                 {[
-                  { initials: "JD", name: "John Doe" },
+                  { initials: "NT", name: "Nguyễn Tín" },
                   { initials: "JS", name: "Jane Smith" },
                   { initials: "MJ", name: "Mike Johnson" },
-                  { initials: "SW", name: "Sarah Williams" },
-                  { initials: "RB", name: "Robert Brown" },
+                  // { initials: "SW", name: "Sarah Williams" },
+                  // { initials: "RB", name: "Robert Brown" },
                 ].map((user, index) => (
                   <div key={index} className="user-item">
                     <div className="user-avatar-small">{user.initials}</div>

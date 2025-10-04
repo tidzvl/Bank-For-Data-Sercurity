@@ -37,16 +37,21 @@ function Transfer() {
   return (
     <div className="dashboard-container">
       {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+      <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <div className="sidebar-logo">■</div>
-          <h1 className="sidebar-title">SecureApp</h1>
+          <span className="sidebar-logo">■</span>
+          <span className="sidebar-title">BM Bank</span>
         </div>
-        
+
         <nav className="sidebar-nav">
           <div className="nav-main">
-            <a href="/dashboard" className="nav-item">
-              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <a href="#dashboard" className="nav-item">
+              <svg
+                className="nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
                 <rect x="14" y="14" width="7" height="7"></rect>
@@ -55,51 +60,81 @@ function Transfer() {
               <span>Dashboard</span>
             </a>
             <a href="#analytics" className="nav-item">
-              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg
+                className="nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <line x1="12" y1="20" x2="12" y2="10"></line>
                 <line x1="18" y1="20" x2="18" y2="4"></line>
                 <line x1="6" y1="20" x2="6" y2="16"></line>
               </svg>
-              <span>Analytics</span>
+              <span>Phân tích</span>
             </a>
             <a href="#reports" className="nav-item">
-              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg
+                className="nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
               </svg>
-              <span>Reports</span>
+              <span>Báo cáo</span>
             </a>
             <a href="/transfer" className="nav-item active">
-              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg
+                className="nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
               </svg>
-              <span>Chuyển dữ liệu</span>
+              <span>Chuyển tiền</span>
             </a>
             <a href="/accounts" className="nav-item">
-              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg
+                className="nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                 <line x1="1" y1="10" x2="23" y2="10"></line>
               </svg>
               <span>Tài khoản</span>
             </a>
           </div>
-          
+
           <div className="nav-bottom">
             <a href="#settings" className="nav-item">
-              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg
+                className="nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <circle cx="12" cy="12" r="3"></circle>
                 <path d="M12 1v6m0 6v6m5.2-13.9l-3.5 3.5m-3.5 3.5l-3.5 3.5M23 12h-6m-6 0H5m13.9-5.2l-3.5 3.5m-3.5 3.5l-3.5 3.5"></path>
               </svg>
               <span>Settings</span>
             </a>
             <a href="#logout" className="nav-item" onClick={handleLogout}>
-              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg
+                className="nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -122,9 +157,9 @@ function Transfer() {
                 <line x1="3" y1="18" x2="21" y2="18"></line>
               </svg>
             </button>
-            <span className="app-name">SecureApp</span>
+            <span className="app-name">BM Bank</span>
             <span className="navbar-separator">/</span>
-            <h2 className="page-title">Chuyển dữ liệu</h2>
+            <h2 className="page-title">Chuyển tiền</h2>
           </div>
           
           <div className="navbar-right">
@@ -137,7 +172,7 @@ function Transfer() {
             </button>
             <div className="user-info">
               <div className="user-avatar">AU</div>
-              <span className="username">Admin User</span>
+              <span className="username">Tin dep trai</span>
             </div>
           </div>
         </div>
@@ -156,21 +191,21 @@ function Transfer() {
                     <rect x="2" y="5" width="20" height="14" rx="2"></rect>
                     <line x1="2" y1="10" x2="22" y2="10"></line>
                   </svg>
-                  <span>Checking Account</span>
+                  <span>Thông tin người nhận</span>
                 </div>
                 
                 <div className="account-details">
                   <div className="detail-row">
-                    <span className="detail-label">Data:</span>
-                    <span className="detail-value">10011100</span>
+                    <span className="detail-label">Ngân hàng:</span>
+                    <span className="detail-value">BM Bank</span>
                   </div>
                   <div className="detail-row">
-                    <span className="detail-label">ID:</span>
+                    <span className="detail-label">Số tài khoản:</span>
                     <span className="detail-value">AB11 0000 0000 1111 1111 11</span>
                   </div>
                   <div className="detail-row">
                     <span className="detail-label">Chủ tài khoản:</span>
-                    <span className="detail-value-name">Nicola Rich</span>
+                    <span className="detail-value-name">Nguyễn Chánh Tín</span>
                   </div>
                 </div>
 
@@ -181,7 +216,7 @@ function Transfer() {
                       <polyline points="16 6 12 2 8 6"></polyline>
                       <line x1="12" y1="2" x2="12" y2="15"></line>
                     </svg>
-                    Share ID
+                    Chia sẽ
                   </button>
                   <button className="btn-action btn-request">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -189,7 +224,7 @@ function Transfer() {
                       <polyline points="7 10 12 15 17 10"></polyline>
                       <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    Request
+                    Lưu
                   </button>
                 </div>
               </div>
@@ -223,7 +258,7 @@ function Transfer() {
           {/* Right Column - Transfer Form */}
           <div className="transfer-right">
             <div className="transfer-form-card">
-              <h3 className="card-title">Chuyển tới</h3>
+              <h3 className="card-title">Loại hình thanh toán</h3>
               
               {/* Tabs */}
               <div className="transfer-tabs">
@@ -231,7 +266,7 @@ function Transfer() {
                   className={`tab-btn ${activeTab === 'own' ? 'active' : ''}`}
                   onClick={() => setActiveTab('own')}
                 >
-                  Tài khoản của tôi
+                  Tài khoản hiện tại
                 </button>
                 <button 
                   className={`tab-btn ${activeTab === 'other' ? 'active' : ''}`}
@@ -243,49 +278,20 @@ function Transfer() {
 
               {/* Form */}
               <form className="transfer-form" onSubmit={handleSubmit}>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label className="form-label">Tên</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      className="form-input"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      placeholder="Nhập tên"
-                    />
+                <div className="account-details">
+                  <div className="detail-row">
+                    <span className="detail-label">Số tài khoản:</span>
+                    <span className="detail-value">AB11 0000 0000 1111 1111 11</span>
                   </div>
-                  <div className="form-group">
-                    <label className="form-label">Họ</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      className="form-input"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Nhập họ"
-                    />
+                  <div className="detail-row">
+                    <span className="detail-label">Số dư:</span>
+                    <span className="detail-value-name">1,225,125,111 VND</span>
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">
-                    ID <span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="id"
-                    className="form-input"
-                    value={formData.id}
-                    onChange={handleInputChange}
-                    placeholder="AB11 0000 0000 0000 0000 00"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    Data <span className="required">*</span>
+                    Số tiền <span className="required">*</span>
                   </label>
                   <div className="input-with-select">
                     <input
@@ -302,10 +308,9 @@ function Transfer() {
                       value={dataUnit}
                       onChange={(e) => setDataUnit(e.target.value)}
                     >
-                      <option value="D">D</option>
-                      <option value="K">K</option>
-                      <option value="M">M</option>
-                      <option value="G">G</option>
+                      <option value="VND">VND</option>
+                      <option value="USD">USD</option>
+                      <option value="Y">Y</option>
                     </select>
                   </div>
                 </div>
