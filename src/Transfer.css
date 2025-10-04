@@ -1,0 +1,434 @@
+/* Transfer Page Styles */
+.transfer-content {
+  flex: 1;
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+/* Left Column - Select User */
+.transfer-left {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+.select-user-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card-title {
+  color: #1a1a1a;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Account Info */
+.account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.account-type {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+}
+
+.account-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #1a1a1a;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.account-type span {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 0.95rem;
+}
+
+.account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 0.5rem 0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.detail-label {
+  color: #666;
+  font-size: 0.875rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  color: #1a1a1a;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  text-align: right;
+}
+
+.detail-value-name {
+  color: #1a1a1a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #e5e5e5;
+}
+
+.btn-action svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.btn-share {
+  background: white;
+  color: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.btn-share:hover {
+  background: #1a1a1a;
+  color: white;
+}
+
+.btn-share svg {
+  stroke: currentColor;
+}
+
+.btn-request {
+  background: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
+}
+
+.btn-request:hover {
+  background: #333;
+  border-color: #333;
+}
+
+.btn-request svg {
+  stroke: white;
+}
+
+/* Saved Users */
+.saved-users {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.saved-title {
+  color: #666;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.saved-user-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem;
+  background: #fafafa;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.saved-user-item:hover {
+  background: #f0f0f0;
+}
+
+.saved-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.saved-name {
+  color: #1a1a1a;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btn-add-user {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background: white;
+  border: 2px dashed #d0d0d0;
+  border-radius: 6px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.25rem;
+}
+
+.btn-add-user:hover {
+  border-color: #1a1a1a;
+  background: #fafafa;
+}
+
+.btn-add-user svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+/* Right Column - Transfer Form */
+.transfer-right {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+}
+
+.transfer-form-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Tabs */
+.transfer-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  background: none;
+  border: none;
+  color: #666;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab-btn:hover {
+  color: #1a1a1a;
+}
+
+.tab-btn.active {
+  color: #1a1a1a;
+  border-bottom-color: #1a1a1a;
+}
+
+/* Form */
+.transfer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  color: #333;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.required {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.form-input {
+  padding: 0.875rem 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  transition: all 0.2s;
+  background: white;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.05);
+}
+
+.form-input::placeholder {
+  color: #999;
+}
+
+/* Data Input with Unit Select */
+.input-with-select {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.data-input {
+  flex: 1;
+}
+
+.data-unit-select {
+  width: 80px;
+  padding: 0.875rem 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  font-weight: 600;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.data-unit-select:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.05);
+}
+
+/* Continue Button */
+.btn-continue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+
+.btn-continue:hover {
+  background: #333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-continue svg {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+  stroke-width: 2;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .transfer-content {
+    flex-direction: column;
+  }
+
+  .transfer-left,
+  .transfer-right {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .transfer-content {
+    padding: 1rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn-action {
+    width: 100%;
+  }
+}
