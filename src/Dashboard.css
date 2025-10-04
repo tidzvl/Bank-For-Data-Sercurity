@@ -519,7 +519,7 @@
 
 /* Notifications Section - 90% */
 .notifications-section {
-  flex: 0 0 calc(90% - 0.75rem);
+  flex: 0 0 calc(82% - 0.75rem);
   background: white;
   border-radius: 8px;
   padding: 1.5rem;
@@ -605,7 +605,7 @@
 
 /* Users Section - 10% */
 .users-section {
-  flex: 0 0 calc(10% - 0.75rem);
+  flex: 0 0 calc(18% - 0.75rem);
   background: white;
   border-radius: 8px;
   padding: 1rem 1.5rem;
