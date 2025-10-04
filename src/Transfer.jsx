@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Transfer.css';
 
-function Transfer({ sidebarOpen, toggleSidebar }) {
+function Transfer() {
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('own');
   const [dataUnit, setDataUnit] = useState('D');
   const [formData, setFormData] = useState({
@@ -10,6 +13,14 @@ function Transfer({ sidebarOpen, toggleSidebar }) {
     id: '',
     data: ''
   });
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleLogout = () => {
+    navigate('/');
+  };
 
   const handleInputChange = (e) => {
     setFormData({
@@ -26,7 +37,7 @@ function Transfer({ sidebarOpen, toggleSidebar }) {
   return (
     <div className="dashboard-container">
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarOpen ? '' : 'closed'}`}>
+      <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
           <div className="sidebar-logo">■</div>
           <h1 className="sidebar-title">SecureApp</h1>
@@ -43,21 +54,25 @@ function Transfer({ sidebarOpen, toggleSidebar }) {
               </svg>
               <span>Dashboard</span>
             </a>
-            <a href="#" className="nav-item">
+            <a href="#analytics" className="nav-item">
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="12" y1="1" x2="12" y2="23"></line>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                <line x1="12" y1="20" x2="12" y2="10"></line>
+                <line x1="18" y1="20" x2="18" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="16"></line>
               </svg>
               <span>Analytics</span>
             </a>
-            <a href="#" className="nav-item">
+            <a href="#reports" className="nav-item">
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
               </svg>
               <span>Reports</span>
             </a>
-            <a href="#" className="nav-item active">
+            <a href="/transfer" className="nav-item active">
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
@@ -66,23 +81,24 @@ function Transfer({ sidebarOpen, toggleSidebar }) {
               </svg>
               <span>Chuyển dữ liệu</span>
             </a>
-            <a href="#" className="nav-item">
+            <a href="/accounts" className="nav-item">
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 2v20M2 12h20"></path>
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
               </svg>
-              <span>Data</span>
+              <span>Tài khoản</span>
             </a>
           </div>
           
           <div className="nav-bottom">
-            <a href="#" className="nav-item">
+            <a href="#settings" className="nav-item">
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="3"></circle>
-                <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+                <path d="M12 1v6m0 6v6m5.2-13.9l-3.5 3.5m-3.5 3.5l-3.5 3.5M23 12h-6m-6 0H5m13.9-5.2l-3.5 3.5m-3.5 3.5l-3.5 3.5"></path>
               </svg>
               <span>Settings</span>
             </a>
-            <a href="/" className="nav-item">
+            <a href="#logout" className="nav-item" onClick={handleLogout}>
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
@@ -92,7 +108,7 @@ function Transfer({ sidebarOpen, toggleSidebar }) {
             </a>
           </div>
         </nav>
-      </div>
+      </aside>
 
       {/* Main Content */}
       <div className="main-content">

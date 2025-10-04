@@ -21,6 +21,10 @@ export default function Accounts() {
     setCardStates(newStates);
   };
 
+  const handleCardClick = (cardId) => {
+    navigate(`/accounts/card/${cardId}`);
+  };
+
   return (
     <div className="dashboard-container">
       {/* Sidebar Menu */}
@@ -241,7 +245,7 @@ export default function Accounts() {
             <h2 className="section-title">My cards</h2>
             <div className="cards-grid">
               {/* Peach Card */}
-              <div className="credit-card peach-card">
+              <div className="credit-card peach-card" onClick={() => handleCardClick('1')}>
                 <div className="card-top">
                   <div className="card-chip">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -249,7 +253,7 @@ export default function Accounts() {
                       <line x1="2" y1="10" x2="22" y2="10"></line>
                     </svg>
                   </div>
-                  <div className="card-toggle">
+                  <div className="card-toggle" onClick={(e) => e.stopPropagation()}>
                     <label className="toggle-switch">
                       <input 
                         type="checkbox" 
@@ -268,7 +272,7 @@ export default function Accounts() {
               </div>
 
               {/* Blue Card */}
-              <div className="credit-card blue-card">
+              <div className="credit-card blue-card" onClick={() => handleCardClick('2')}>
                 <div className="card-top">
                   <div className="card-chip">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -276,7 +280,7 @@ export default function Accounts() {
                       <line x1="2" y1="10" x2="22" y2="10"></line>
                     </svg>
                   </div>
-                  <div className="card-toggle">
+                  <div className="card-toggle" onClick={(e) => e.stopPropagation()}>
                     <label className="toggle-switch">
                       <input 
                         type="checkbox" 
@@ -295,7 +299,7 @@ export default function Accounts() {
               </div>
 
               {/* White Card */}
-              <div className="credit-card white-card">
+              <div className="credit-card white-card" onClick={() => handleCardClick('3')}>
                 <div className="card-top">
                   <div className="card-chip">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -303,7 +307,7 @@ export default function Accounts() {
                       <line x1="2" y1="10" x2="22" y2="10"></line>
                     </svg>
                   </div>
-                  <div className="card-toggle">
+                  <div className="card-toggle" onClick={(e) => e.stopPropagation()}>
                     <label className="toggle-switch">
                       <input 
                         type="checkbox" 
