@@ -24,8 +24,8 @@ export default function LoginPage() {
         <div className="illustration">
           <div className="illustration-content">
             <div className="brand-text">
-              <h1>SecureApp</h1>
-              <p>Professional Dashboard System</p>
+              <h1>BM Bank</h1>
+              <p>Professional Black Market Bank System</p>
             </div>
           </div>
         </div>
@@ -37,14 +37,14 @@ export default function LoginPage() {
           <div className="header">
             <div className="logo">
               <span className="logo-icon">■</span>
-              <span className="logo-text">SecureApp</span>
+              <span className="logo-text">Black Market Bank</span>
             </div>
             <div className="language-selector">VN</div>
           </div>
 
           <div className="welcome-text">
             <h2>Chào mừng bạn đến với</h2>
-            <h3>SecureApp</h3>
+            <h3>BM Bank</h3>
             <p className="login-label">Tên đăng nhập</p>
           </div>
 
@@ -105,7 +105,7 @@ export default function LoginPage() {
           </div>
 
           <div className="demo-notice">
-            <p>⚠️ Đây là trang demo - Template Login Page</p>
+            <p>CopyRight 2025 BM Bank by <a href='https://portfolio.tinlikesub.pro/'>inT1z</a></p>
           </div>
         </div>
       </div>

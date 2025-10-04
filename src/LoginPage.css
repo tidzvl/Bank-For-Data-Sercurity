@@ -11,7 +11,7 @@
 }
 
 /* Left Side - Illustration */
-.login-left {
+/* .login-left {
   flex: 1;
   background: #1a1a1a;
   display: flex;
@@ -19,7 +19,20 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+} */
+.login-left {
+  flex: 1;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('img/background.png'); 
+  background-size: cover;     
+  background-position: center;  
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
+
 
 .illustration {
   width: 100%;
