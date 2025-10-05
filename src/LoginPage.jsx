@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginPage.css';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -18,94 +18,90 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-container">
+    <div className="flex h-screen">
       {/* Left Side - Illustration */}
-      <div className="login-left">
-        <div className="illustration">
-          <div className="illustration-content">
-            <div className="brand-text">
-              <h1>BM Bank</h1>
-              <p>Professional Black Market Bank System</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div 
+  className="relative hidden lg:flex lg:w-1/2 items-center justify-center after:absolute after:inset-0 after:bg-[url('img/background.png')] after:bg-cover after:bg-center after:brightness-50 after:z-0">
+  <div className="text-center text-white px-12 z-10">
+    <h1 className="text-5xl font-bold mb-4">BM Bank</h1>
+    <p className="text-xl text-gray-300">Professional Black Market Bank System</p>
+  </div>
+</div>
+
 
       {/* Right Side - Login Form */}
-      <div className="login-right">
-        <div className="login-form-container">
-          <div className="header">
-            <div className="logo">
-              <span className="logo-icon">■</span>
-              <span className="logo-text">Black Market Bank</span>
+      <div className="flex-1 flex items-center justify-center bg-white px-6">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-12">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold">■</span>
+              <span className="text-xl font-semibold">BM BANK</span>
             </div>
-            <div className="language-selector">VN</div>
+            <div className="px-3 py-1 bg-gray-100 rounded text-sm font-medium">VN</div>
           </div>
 
-          <div className="welcome-text">
-            <h2>Chào mừng bạn đến với</h2>
-            <h3>BM Bank</h3>
-            <p className="login-label">Tên đăng nhập</p>
+          {/* Welcome Text */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-2">Chào mừng bạn đến với</h2>
+            <h3 className="text-3xl font-bold mb-4">BM Bank</h3>
+            <p className="text-sm font-medium text-gray-700">Tên đăng nhập</p>
           </div>
 
-          <form onSubmit={handleLogin}>
-            <div className="form-group">
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
               <input
                 type="text"
                 placeholder="Nhập tên đăng nhập"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="form-input"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg focus:border-transparent"
               />
             </div>
 
-            <div className="form-group">
-              <label className="input-label">Nhập mật khẩu</label>
-              <div className="password-wrapper">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nhập mật khẩu
+              </label>
+              <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Nhập mật khẩu"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="form-input"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg focus:border-transparent"
                 />
                 <button
                   type="button"
-                  className="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    {showPassword ? (
-                      <>
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                      </>
-                    ) : (
-                      <>
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </>
-                    )}
-                  </svg>
+                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                 </button>
               </div>
             </div>
 
-            <button type="submit" className="login-button">
+            <button
+              type="submit"
+              className="w-full bg-dark-bg text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition-colors"
+            >
               Đăng nhập
             </button>
           </form>
 
-          <div className="footer-links">
-            <a href="#forgot">Kết nối với chúng tôi</a>
+          {/* Footer Links */}
+          <div className="flex items-center justify-center gap-3 mt-8 text-sm text-gray-600">
+            <a href="#forgot" className="hover:text-dark-bg">Kết nối với chúng tôi</a>
             <span>|</span>
-            <a href="#register">Điều khoản và điều kiện</a>
+            <a href="#register" className="hover:text-dark-bg">Điều khoản và điều kiện</a>
             <span>|</span>
-            <a href="#help">An toàn bảo mật</a>
+            <a href="#help" className="hover:text-dark-bg">An toàn bảo mật</a>
           </div>
 
-          <div className="demo-notice">
-            <p>CopyRight 2025 BM Bank by <a href='https://portfolio.tinlikesub.pro/'>inT1z</a></p>
+          {/* Demo Notice */}
+          <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+            <p className="text-sm text-yellow-800">Copyright © 2025 BM Bank. All rights reserved</p>
           </div>
         </div>
       </div>

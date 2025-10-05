@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Transfer.css';
+import {
+  MdDashboard,
+  MdBarChart,
+  MdDescription,
+  MdPeople,
+  MdCreditCard,
+  MdSettings,
+  MdLogout,
+  MdMenu,
+  MdNotifications,
+  MdFileUpload,
+  MdFileDownload,
+  MdAdd,
+} from 'react-icons/md';
 
 function Transfer() {
   const navigate = useNavigate();
@@ -34,295 +47,258 @@ function Transfer() {
     console.log('Transfer data:', { ...formData, dataUnit });
   };
 
+  const savedUsers = [
+    { initials: 'MJ', name: 'Maria Jones' },
+    { initials: 'DS', name: 'David Smith' },
+    { initials: 'EW', name: 'Emma Wilson' },
+    { initials: 'JB', name: 'James Brown' }
+  ];
+
   return (
-    <div className="dashboard-container">
+    <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
-        <div className="sidebar-header">
-          <span className="sidebar-logo">■</span>
-          <span className="sidebar-title">BM Bank</span>
+      <aside
+        className={`${
+          sidebarOpen ? "w-64" : "w-20"
+        } bg-dark-bg text-white transition-all duration-300 flex-shrink-0 flex flex-col fixed lg:relative h-full z-50 ${
+          !sidebarOpen ? "lg:w-20" : ""
+        }`}
+      >
+        <div className="p-6 flex items-center gap-3">
+          <span className="text-2xl font-bold">■</span>
+          {sidebarOpen && <span className="text-xl font-semibold">BM Bank</span>}
         </div>
 
-        <nav className="sidebar-nav">
-          <div className="nav-main">
-            <a href="/dashboard" className="nav-item">
-              <svg
-                className="nav-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-              </svg>
-              <span>Trang chủ</span>
-            </a>
-            <a href="#analytics" className="nav-item">
-              <svg
-                className="nav-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <line x1="12" y1="20" x2="12" y2="10"></line>
-                <line x1="18" y1="20" x2="18" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="16"></line>
-              </svg>
-              <span>Phân tích</span>
-            </a>
-            <a href="#reports" className="nav-item">
-              <svg
-                className="nav-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-              <span>Báo cáo</span>
-            </a>
-            <a href="/transfer" className="nav-item active">
-              <svg
-                className="nav-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-              <span>Chuyển tiền</span>
-            </a>
-            <a href="/accounts" className="nav-item">
-              <svg
-                className="nav-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                <line x1="1" y1="10" x2="23" y2="10"></line>
-              </svg>
-              <span>Tài khoản</span>
-            </a>
-          </div>
-
-          <div className="nav-bottom">
-            <a href="#settings" className="nav-item">
-              <svg
-                className="nav-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M12 1v6m0 6v6m5.2-13.9l-3.5 3.5m-3.5 3.5l-3.5 3.5M23 12h-6m-6 0H5m13.9-5.2l-3.5 3.5m-3.5 3.5l-3.5 3.5"></path>
-              </svg>
-              <span>Settings</span>
-            </a>
-            <a href="#logout" className="nav-item" onClick={handleLogout}>
-              <svg
-                className="nav-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-              <span>Logout</span>
-            </a>
-          </div>
+        <nav className="flex-1 px-4 space-y-2">
+          <a
+            href="/dashboard"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            <MdDashboard size={20} />
+            {sidebarOpen && <span>Trang chủ</span>}
+          </a>
+          <a
+            href="#analytics"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            <MdBarChart size={20} />
+            {sidebarOpen && <span>Phân tích</span>}
+          </a>
+          <a
+            href="#reports"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            <MdDescription size={20} />
+            {sidebarOpen && <span>Báo cáo</span>}
+          </a>
+          <a
+            href="/transfer"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-800 text-white"
+          >
+            <MdPeople size={20} />
+            {sidebarOpen && <span>Chuyển tiền</span>}
+          </a>
+          <a
+            href="/accounts"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            <MdCreditCard size={20} />
+            {sidebarOpen && <span>Tài khoản</span>}
+          </a>
         </nav>
+
+        <div className="px-4 pb-6 space-y-2 border-t border-gray-700 pt-4">
+          <a
+            href="#settings"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            <MdSettings size={20} />
+            {sidebarOpen && <span>Settings</span>}
+          </a>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors text-left"
+          >
+            <MdLogout size={20} />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
-      <div className="main-content">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Navbar */}
-        <div className="navbar">
-          <div className="navbar-left">
-            <button className="menu-toggle" onClick={toggleSidebar}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            </button>
-            <span className="app-name">BM Bank</span>
-            <span className="navbar-separator">/</span>
-            <h2 className="page-title">Chuyển tiền</h2>
-          </div>
-          
-          <div className="navbar-right">
-            <button className="notification-btn">
-              <svg className="notification-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              </svg>
-              <span className="notification-badge">5</span>
-            </button>
-            <div className="user-info">
-              <div className="user-avatar">AU</div>
-              <span className="username">Tin dep trai</span>
+        <header className="bg-white border-b border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={toggleSidebar}
+                className="p-2 hover:bg-gray-100 rounded-lg lg:hidden"
+              >
+                <MdMenu size={24} />
+              </button>
+              <span className="font-semibold">BM Bank</span>
+              <span className="text-gray-400">/</span>
+              <h1 className="text-xl font-semibold">Chuyển tiền</h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <button className="relative p-2 hover:bg-gray-100 rounded-lg">
+                <MdNotifications size={24} />
+                <span className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center rounded-full">
+                  5
+                </span>
+              </button>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-dark-bg text-white rounded-full flex items-center justify-center font-semibold">
+                  AU
+                </div>
+                <span className="font-medium hidden sm:block">Tin dep trai</span>
+              </div>
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Transfer Content */}
-        <div className="transfer-content">
-          {/* Left Column - Select User */}
-          <div className="transfer-left">
-            <div className="select-user-card">
-              <h3 className="card-title">Chọn người dùng</h3>
-              
-              {/* Account Info */}
-              <div className="account-info">
-                <div className="account-type">
-                  <svg className="account-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                    <line x1="2" y1="10" x2="22" y2="10"></line>
-                  </svg>
-                  <span>Thông tin người nhận</span>
-                </div>
+        <div className="flex-1 overflow-auto p-6">
+          <div className="grid lg:grid-cols-12 gap-6">
+            {/* Left Column - Select User (45%) */}
+            <div className="lg:col-span-5 space-y-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-lg font-semibold mb-6">Người nhận</h3>
                 
-                <div className="account-details">
-                  <div className="detail-row">
-                    <span className="detail-label">Ngân hàng:</span>
-                    <span className="detail-value">BM Bank</span>
+                {/* Account Info */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <MdCreditCard size={20} />
+                    <span className="font-medium">Tài khoản đã chọn</span>
                   </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Số tài khoản:</span>
-                    <span className="detail-value">AB11 0000 0000 1111 1111 11</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Chủ tài khoản:</span>
-                    <span className="detail-value-name">Nguyễn Chánh Tín</span>
-                  </div>
-                </div>
-
-                <div className="action-buttons">
-                  <button className="btn-action btn-share">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                      <polyline points="16 6 12 2 8 6"></polyline>
-                      <line x1="12" y1="2" x2="12" y2="15"></line>
-                    </svg>
-                    Chia sẽ
-                  </button>
-                  <button className="btn-action btn-request">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    Lưu
-                  </button>
-                </div>
-              </div>
-
-              {/* Saved Users */}
-              <div className="saved-users">
-                <h4 className="saved-title">Người dùng đã lưu</h4>
-                <div className="saved-list">
-                  {[
-                    { initials: 'MJ', name: 'Maria Jones' },
-                    { initials: 'DS', name: 'David Smith' },
-                    { initials: 'EW', name: 'Emma Wilson' },
-                    { initials: 'JB', name: 'James Brown' }
-                  ].map((user, index) => (
-                    <div key={index} className="saved-user-item">
-                      <div className="saved-avatar">{user.initials}</div>
-                      <div className="saved-name">{user.name}</div>
+                  
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Ngân hàng:</span>
+                      <span className="font-semibold">BM Bank</span>
                     </div>
-                  ))}
-                  <button className="btn-add-user">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  </button>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Số tài khoản:</span>
+                      <span className="font-mono text-xs">AB11 0000 0000 1111 1111 11</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Chủ tài khoản:</span>
+                      <span className="font-semibold">Nguyễn Tín</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                      <MdFileUpload size={20} />
+                      <span className="font-medium">Share</span>
+                    </button>
+                    <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-dark-bg text-white rounded-lg hover:bg-gray-900 transition-colors">
+                      <MdFileDownload size={20} />
+                      <span className="font-medium">Lưu</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Saved Users */}
+                <div className="mt-8">
+                  <h4 className="font-semibold mb-4">Tài khoản đã lưu</h4>
+                  <div className="space-y-3">
+                    {savedUsers.map((user, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      >
+                        <div className="w-10 h-10 bg-dark-bg text-white rounded-full flex items-center justify-center font-semibold text-sm">
+                          {user.initials}
+                        </div>
+                        <span className="font-medium">{user.name}</span>
+                      </div>
+                    ))}
+                    <button className="w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-dark-bg hover:bg-gray-50 transition-colors">
+                      <MdAdd size={20} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Column - Transfer Form */}
-          <div className="transfer-right">
-            <div className="transfer-form-card">
-              <h3 className="card-title">Loại hình thanh toán</h3>
-              
-              {/* Tabs */}
-              <div className="transfer-tabs">
-                <button 
-                  className={`tab-btn ${activeTab === 'own' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('own')}
-                >
-                  Tài khoản hiện tại
-                </button>
-                <button 
-                  className={`tab-btn ${activeTab === 'other' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('other')}
-                >
-                  Tài khoản khác
-                </button>
+            {/* Right Column - Transfer Form (55%) */}
+            <div className="lg:col-span-7">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-lg font-semibold mb-6">Tài khoản gửi</h3>
+                
+                {/* Tabs */}
+                <div className="flex gap-4 mb-6 border-b border-gray-200">
+                  <button
+                    onClick={() => setActiveTab('own')}
+                    className={`pb-3 px-4 font-medium transition-colors ${
+                      activeTab === 'own'
+                        ? 'text-dark-bg border-b-2 border-dark-bg'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Tài khoản hiện tại
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('other')}
+                    className={`pb-3 px-4 font-medium transition-colors ${
+                      activeTab === 'other'
+                        ? 'text-dark-bg border-b-2 border-dark-bg'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Tài khoản khác
+                  </button>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Số tài khoản:</span>
+                      <span className="font-mono text-xs">AB11 0000 0000 1111 1111 11</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Số dư:</span>
+                      <span className="font-semibold">1,330,121 VND</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Số tiền *
+                    </label>
+                    <div className="flex gap-3">
+                      <input
+                        type="number"
+                        name="data"
+                        placeholder="0"
+                        value={formData.data}
+                        onChange={handleInputChange}
+                        required
+                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg focus:border-transparent"
+                      />
+                      <select
+                        value={dataUnit}
+                        onChange={(e) => setDataUnit(e.target.value)}
+                        className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg focus:border-transparent"
+                      >
+                        <option value="D">VND</option>
+                        <option value="K">USD</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-dark-bg text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition-colors flex items-center justify-center gap-2"
+                  >
+                    Tiếp tục
+                    <span>→</span>
+                  </button>
+                </form>
               </div>
-
-              {/* Form */}
-              <form className="transfer-form" onSubmit={handleSubmit}>
-                <div className="account-details">
-                  <div className="detail-row">
-                    <span className="detail-label">Số tài khoản:</span>
-                    <span className="detail-value">AB11 0000 0000 1111 1111 11</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Số dư:</span>
-                    <span className="detail-value-name">1,225,125,111 VND</span>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    Số tiền <span className="required">*</span>
-                  </label>
-                  <div className="input-with-select">
-                    <input
-                      type="number"
-                      name="data"
-                      className="form-input data-input"
-                      value={formData.data}
-                      onChange={handleInputChange}
-                      placeholder="0"
-                      required
-                    />
-                    <select 
-                      className="data-unit-select"
-                      value={dataUnit}
-                      onChange={(e) => setDataUnit(e.target.value)}
-                    >
-                      <option value="VND">VND</option>
-                      <option value="USD">USD</option>
-                      <option value="Y">Y</option>
-                    </select>
-                  </div>
-                </div>
-
-                <button type="submit" className="btn-continue">
-                  Tiếp tục
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </button>
-              </form>
             </div>
           </div>
         </div>
