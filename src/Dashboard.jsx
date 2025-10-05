@@ -37,7 +37,7 @@ export default function Dashboard() {
                 <rect x="14" y="14" width="7" height="7"></rect>
                 <rect x="3" y="14" width="7" height="7"></rect>
               </svg>
-              <span>Dashboard</span>
+              <span>Trang chủ</span>
             </a>
             <a href="#analytics" className="nav-item">
               <svg
