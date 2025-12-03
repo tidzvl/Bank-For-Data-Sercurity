@@ -1,0 +1,14 @@
+# Docker volumes
+oracle-data/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

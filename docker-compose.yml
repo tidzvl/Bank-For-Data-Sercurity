@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # Oracle Database
+  oracle-db:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    container_name: bm-bank-oracle-db
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      - ORACLE_PWD=Oracle123
+      - ORACLE_CHARACTERSET=AL32UTF8
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./oracle-banking-db/init-scripts:/opt/oracle/scripts/startup
+      - ./oracle-banking-db/sql:/opt/oracle/sql
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/Oracle123@localhost:1521/XE"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    restart: unless-stopped
+    shm_size: 1g
+    networks:
+      - bm-bank-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: bm-bank-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - ORACLE_USER=system
+      - ORACLE_PASSWORD=Oracle123
+      - ORACLE_CONNECT_STRING=oracle-db:1521/XE
+      - BANKING_ADMIN_USER=admin
+      - BANKING_ADMIN_PASSWORD=123456
+      - BANKING_CONNECT_STRING=oracle-db:1521/banking
+      - JWT_SECRET=bm-bank-secure-jwt-secret-key-2025
+      - JWT_EXPIRES_IN=24h
+      - FRONTEND_URL=http://localhost:5003
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bm-bank-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bm-bank-frontend
+    ports:
+      - "5003:5003"
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - bm-bank-network
+
+volumes:
+  oracle-data:
+    driver: local
+
+networks:
+  bm-bank-network:
+    driver: bridge

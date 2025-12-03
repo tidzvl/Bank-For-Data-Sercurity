@@ -1,20 +1,44 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { useAuth } from './context/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (!username || !password) {
-      alert('Vui lòng điền đầy đủ thông tin');
+      setError('Vui lòng điền đầy đủ thông tin');
       return;
     }
-    navigate('/dashboard');
+
+    setLoading(true);
+
+    try {
+      const user = await login(username, password);
+
+      // Redirect based on role
+      if (user.role === 'CUSTOMER') {
+        navigate('/customer/dashboard');
+      } else if (user.role === 'STAFF') {
+        navigate('/staff/dashboard');
+      } else if (user.role === 'DIRECTOR') {
+        navigate('/director/dashboard');
+      }
+    } catch (err) {
+      setError(err.message || 'Đăng nhập thất bại');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,6 +74,12 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-5">
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
             <div>
               <input
                 type="text"
@@ -57,6 +87,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg focus:border-transparent"
+                disabled={loading}
               />
             </div>
 
@@ -84,11 +115,22 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-dark-bg text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition-colors"
+              className="w-full bg-dark-bg text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
             >
-              Đăng nhập
+              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
           </form>
+
+          {/* Demo Accounts */}
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm font-semibold text-blue-800 mb-2">🔑 Demo Accounts:</p>
+            <div className="space-y-1 text-xs text-blue-700">
+              <p><strong>Customer:</strong> kh1 / 123456 hoặc kh2 / 123456</p>
+              <p><strong>Staff:</strong> nv1 / 123456</p>
+              <p><strong>Director:</strong> gd1 / 123456</p>
+            </div>
+          </div>
 
           {/* Footer Links */}
           <div className="flex items-center justify-center gap-3 mt-8 text-sm text-gray-600">
