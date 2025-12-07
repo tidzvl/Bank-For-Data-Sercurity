@@ -190,80 +190,86 @@ export default function DirectorDashboard() {
               </div>
 
               <div className="space-y-4">
-                {pendingTransactions.map((transaction) => {
-                  const afterBalance = transaction.type === 'DEPOSIT'
-                    ? transaction.currentBalance + transaction.amount
-                    : transaction.currentBalance - transaction.amount;
+                {pendingTransactions.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">
+                    <MdAssignment size={48} className="mx-auto mb-3 text-gray-300" />
+                    <p>Không có phiếu chờ duyệt</p>
+                  </div>
+                ) : (
+                  pendingTransactions.map((transaction) => {
+                    const afterBalance = transaction.type === 'DEPOSIT'
+                      ? transaction.current_balance + transaction.amount
+                      : transaction.current_balance - transaction.amount;
 
-                  return (
-                    <div
-                      key={transaction.id}
-                      className="p-4 border border-gray-200 rounded-lg hover:border-yellow-400 hover:shadow-md transition-all"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-semibold text-lg">#{transaction.id}</span>
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                              transaction.type === 'DEPOSIT'
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-700'
-                            }`}>
-                              {transaction.type === 'DEPOSIT' ? 'NẠP TIỀN' : 'RÚT TIỀN'}
-                            </span>
+                    return (
+                      <div
+                        key={transaction.id}
+                        className="p-4 border border-gray-200 rounded-lg hover:border-yellow-400 hover:shadow-md transition-all"
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-semibold text-lg">#{transaction.id}</span>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                transaction.type === 'DEPOSIT'
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-red-100 text-red-700'
+                              }`}>
+                                {transaction.type === 'DEPOSIT' ? 'NẠP TIỀN' : 'RÚT TIỀN'}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                              Khách hàng: <span className="font-medium">{transaction.fullname}</span> (@{transaction.username})
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              Tài khoản: <span className="font-medium">#{transaction.account_id}</span>
+                            </p>
                           </div>
-                          <p className="text-sm text-gray-600">
-                            Khách hàng: <span className="font-medium">{transaction.customerName}</span> (@{transaction.customer})
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Tài khoản: <span className="font-medium">#{transaction.account_id}</span>
-                          </p>
+                          <div className="text-right">
+                            <p className={`text-2xl font-bold ${
+                              transaction.type === 'DEPOSIT' ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                              {transaction.type === 'DEPOSIT' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className={`text-2xl font-bold ${
-                            transaction.type === 'DEPOSIT' ? 'text-green-600' : 'text-red-600'
-                          }`}>
-                            {transaction.type === 'DEPOSIT' ? '+' : '-'}{formatCurrency(transaction.amount)}
-                          </p>
-                        </div>
-                      </div>
 
-                      <div className="grid grid-cols-2 gap-4 mb-3 p-3 bg-gray-50 rounded">
-                        <div>
-                          <p className="text-xs text-gray-500">Số dư hiện tại</p>
-                          <p className="font-semibold">{formatCurrency(transaction.currentBalance)}</p>
+                        <div className="grid grid-cols-2 gap-4 mb-3 p-3 bg-gray-50 rounded">
+                          <div>
+                            <p className="text-xs text-gray-500">Số dư hiện tại</p>
+                            <p className="font-semibold">{formatCurrency(transaction.current_balance)}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Số dư sau GD</p>
+                            <p className="font-semibold text-blue-600">{formatCurrency(afterBalance)}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs text-gray-500">Số dư sau GD</p>
-                          <p className="font-semibold text-blue-600">{formatCurrency(afterBalance)}</p>
-                        </div>
-                      </div>
 
-                      <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-                        <div className="text-xs text-gray-500">
-                          <p>Tạo bởi: {transaction.createdBy}</p>
-                          <p>{transaction.date}</p>
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleReject(transaction.id)}
-                            className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
-                          >
-                            <MdCancel size={18} />
-                            Từ chối
-                          </button>
-                          <button
-                            onClick={() => handleApprove(transaction)}
-                            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                          >
-                            <MdCheckCircle size={18} />
-                            Duyệt
-                          </button>
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                          <div className="text-xs text-gray-500">
+                            <p>{new Date(transaction.req_date).toLocaleString('vi-VN')}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleReject(transaction.id)}
+                              className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
+                            >
+                              <MdCancel size={18} />
+                              Từ chối
+                            </button>
+                            <button
+                              onClick={() => handleApprove(transaction)}
+                              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            >
+                              <MdCheckCircle size={18} />
+                              Duyệt
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                )}
               </div>
 
               <Link

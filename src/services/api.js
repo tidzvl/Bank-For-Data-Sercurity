@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Get token from localStorage
 const getToken = () => localStorage.getItem('token');
@@ -108,6 +108,10 @@ export const directorAPI = {
     method: 'PUT',
     body: JSON.stringify(data)
   }),
+
+  getCustomers: () => apiCall('/director/customers'),
+
+  getAccounts: () => apiCall('/director/accounts'),
 
   lockAccount: (id) => apiCall(`/director/accounts/${id}/lock`, {
     method: 'PUT'

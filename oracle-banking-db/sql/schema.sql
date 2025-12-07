@@ -1,8 +1,7 @@
 -- Banking Database Schema Setup
--- Chạy với user admin trong PDB banking
+-- Chạy với user admin trong PDB FREEPDB1
 
--- Set session
-ALTER SESSION SET CONTAINER = banking;
+-- Set session (no need to alter session, already connected to FREEPDB1)
 ALTER USER admin QUOTA UNLIMITED ON SYSTEM;
 GRANT EXECUTE ON DBMS_RLS TO admin;
 

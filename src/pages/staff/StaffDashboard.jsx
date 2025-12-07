@@ -12,10 +12,15 @@ import {
   MdTrendingUp
 } from 'react-icons/md';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import { staffAPI } from '../../services/api';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function StaffDashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const { showToast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showCreateTransactionModal, setShowCreateTransactionModal] = useState(false);
@@ -23,6 +28,18 @@ export default function StaffDashboard() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Transaction form states
+  const [customerAccounts, setCustomerAccounts] = useState([]);
+  const [loadingAccounts, setLoadingAccounts] = useState(false);
+  const [transactionForm, setTransactionForm] = useState({
+    customer_username: '',
+    account_id: '',
+    username: '',
+    amount: '',
+    type: 'DEPOSIT'
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -49,7 +66,7 @@ export default function StaffDashboard() {
   const recentTransactions = transactions.slice(0, 5);
   const stats = {
     totalCustomers: customers.length,
-    activeAccounts: customers.reduce((sum, c) => sum + (c.accountCount || 0), 0),
+    activeAccounts: customers.reduce((sum, c) => sum + (c.activeAccountCount || 0), 0),
     pendingTransactions: transactions.filter(t => t.status === 'pending').length,
     todayTransactions: transactions.length
   };
@@ -60,6 +77,105 @@ export default function StaffDashboard() {
       currency: 'VND'
     }).format(amount);
   };
+
+  // Load customer accounts when customer is selected
+  const loadCustomerAccounts = async (username) => {
+    if (!username) {
+      setCustomerAccounts([]);
+      return;
+    }
+
+    try {
+      setLoadingAccounts(true);
+      const response = await axios.get(`${API_URL}/staff/customers/${username}/accounts`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCustomerAccounts(response.data.accounts || []);
+    } catch (err) {
+      console.error('Error loading customer accounts:', err);
+      showToast('Không thể tải tài khoản của khách hàng', 'error');
+      setCustomerAccounts([]);
+    } finally {
+      setLoadingAccounts(false);
+    }
+  };
+
+  // Handle customer selection
+  const handleCustomerChange = (e) => {
+    const username = e.target.value;
+    setTransactionForm({
+      ...transactionForm,
+      customer_username: username,
+      account_id: '',
+      username: username
+    });
+
+    if (username) {
+      loadCustomerAccounts(username);
+    } else {
+      setCustomerAccounts([]);
+    }
+  };
+
+  // Handle transaction form submit
+  const handleTransactionSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/staff/transactions`,
+        {
+          account_id: parseInt(transactionForm.account_id),
+          username: transactionForm.username,
+          amount: parseFloat(transactionForm.amount),
+          type: transactionForm.type
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      showToast(response.data.message || 'Tạo phiếu giao dịch thành công', 'success');
+
+      // Reset form and close modal
+      setTransactionForm({
+        customer_username: '',
+        account_id: '',
+        username: '',
+        amount: '',
+        type: 'DEPOSIT'
+      });
+      setCustomerAccounts([]);
+      setShowCreateTransactionModal(false);
+
+      // Reload data
+      loadData();
+
+    } catch (err) {
+      const errorData = err.response?.data;
+
+      if (errorData?.trigger_info) {
+        showToast(
+          errorData.error,
+          'error',
+          errorData.trigger_info,
+          8000
+        );
+      } else {
+        showToast(
+          errorData?.error || 'Không thể tạo giao dịch',
+          'error'
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Get selected customer and account info
+  const selectedCustomer = customers.find(c => c.username === transactionForm.customer_username);
+  const selectedAccount = customerAccounts.find(acc => acc.id === parseInt(transactionForm.account_id));
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -257,8 +373,14 @@ export default function StaffDashboard() {
                     <div key={transaction.id} className="pb-3 border-b border-gray-100 last:border-0">
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-sm font-medium">{transaction.customer}</p>
-                        <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">
-                          Chờ duyệt
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          transaction.status === 'accepted'
+                            ? 'bg-green-100 text-green-700'
+                            : transaction.status === 'rejected'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {transaction.status === 'accepted' ? 'Đã duyệt' : transaction.status === 'rejected' ? 'Từ chối' : 'Chờ duyệt'}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -290,57 +412,171 @@ export default function StaffDashboard() {
       {/* Create Transaction Modal */}
       {showCreateTransactionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-semibold mb-4">Tạo giao dịch mới</h3>
-            <form className="space-y-4">
+            <form onSubmit={handleTransactionSubmit} className="space-y-4">
+              {/* Step 1: Customer Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Khách hàng</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg">
-                  <option value="">Chọn khách hàng</option>
-                  <option value="kh1">kh1 - Nguyen Van A</option>
-                  <option value="kh2">kh2 - Tran Van B</option>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Bước 1: Chọn khách hàng <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={transactionForm.customer_username}
+                  onChange={handleCustomerChange}
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg"
+                >
+                  <option value="">-- Chọn khách hàng --</option>
+                  {customers.map((customer) => (
+                    <option key={customer.username} value={customer.username}>
+                      {customer.fullname} (@{customer.username}) - CCCD: {customer.cccd}
+                    </option>
+                  ))}
                 </select>
               </div>
+
+              {/* Customer Info Display */}
+              {selectedCustomer && (
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                  <h4 className="font-semibold text-sm text-gray-900 mb-2">Thông tin khách hàng</h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-gray-600">Họ tên:</span>
+                      <p className="font-semibold text-gray-900">{selectedCustomer.fullname}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">CCCD:</span>
+                      <p className="font-semibold text-gray-900">{selectedCustomer.cccd}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Account Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Tài khoản</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg">
-                  <option value="">Chọn tài khoản</option>
-                </select>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Bước 2: Chọn tài khoản <span className="text-red-500">*</span>
+                </label>
+                {loadingAccounts ? (
+                  <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 text-center text-sm">
+                    Đang tải tài khoản...
+                  </div>
+                ) : !transactionForm.customer_username ? (
+                  <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 text-center text-sm">
+                    Vui lòng chọn khách hàng trước
+                  </div>
+                ) : customerAccounts.length === 0 ? (
+                  <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-yellow-50 text-yellow-700 text-center text-sm">
+                    Khách hàng này chưa có tài khoản nào
+                  </div>
+                ) : (
+                  <select
+                    value={transactionForm.account_id}
+                    onChange={(e) => setTransactionForm({ ...transactionForm, account_id: e.target.value })}
+                    required
+                    disabled={!transactionForm.customer_username}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  >
+                    <option value="">-- Chọn tài khoản --</option>
+                    {customerAccounts.map((account) => (
+                      <option key={account.id} value={account.id}>
+                        #{account.id} - {account.account_number} - Số dư: {account.balance.toLocaleString('vi-VN')} VNĐ - {account.status === 'active' ? '✓ Hoạt động' : '✗ Khóa'}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
+
+              {/* Account Info Display */}
+              {selectedAccount && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <h4 className="font-semibold text-sm text-blue-900 mb-2">Thông tin tài khoản</h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-blue-700">Số tài khoản:</span>
+                      <p className="font-bold text-blue-900 font-mono">{selectedAccount.account_number}</p>
+                    </div>
+                    <div>
+                      <span className="text-blue-700">Số dư hiện tại:</span>
+                      <p className="font-bold text-blue-900">{selectedAccount.balance.toLocaleString('vi-VN')} VNĐ</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Transaction Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Loại giao dịch</label>
                 <div className="flex gap-4">
-                  <label className="flex items-center">
-                    <input type="radio" name="type" value="DEPOSIT" className="mr-2" />
-                    Nạp tiền
+                  <label className={`flex-1 flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                    transactionForm.type === 'DEPOSIT' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+                  }`}>
+                    <input
+                      type="radio"
+                      value="DEPOSIT"
+                      checked={transactionForm.type === 'DEPOSIT'}
+                      onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value })}
+                      className="mr-2"
+                    />
+                    <span className="font-semibold text-sm">NẠP TIỀN</span>
                   </label>
-                  <label className="flex items-center">
-                    <input type="radio" name="type" value="WITHDRAW" className="mr-2" />
-                    Rút tiền
+                  <label className={`flex-1 flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                    transactionForm.type === 'WITHDRAW' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                  }`}>
+                    <input
+                      type="radio"
+                      value="WITHDRAW"
+                      checked={transactionForm.type === 'WITHDRAW'}
+                      onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value })}
+                      className="mr-2"
+                    />
+                    <span className="font-semibold text-sm">RÚT TIỀN</span>
                   </label>
                 </div>
               </div>
+
+              {/* Amount */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Số tiền</label>
                 <input
                   type="number"
-                  placeholder="Nhập số tiền"
+                  value={transactionForm.amount}
+                  onChange={(e) => setTransactionForm({ ...transactionForm, amount: e.target.value })}
+                  required
+                  min="1000"
+                  step="1000"
+                  placeholder="Nhập số tiền..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-bg"
                 />
+                <p className="text-xs text-gray-500 mt-1">Số tiền tối thiểu: 1,000 VNĐ</p>
               </div>
+
+              {/* Submit Buttons */}
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowCreateTransactionModal(false)}
+                  onClick={() => {
+                    setShowCreateTransactionModal(false);
+                    setTransactionForm({
+                      customer_username: '',
+                      account_id: '',
+                      username: '',
+                      amount: '',
+                      type: 'DEPOSIT'
+                    });
+                    setCustomerAccounts([]);
+                  }}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  disabled={submitting}
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-dark-bg text-white rounded-lg hover:bg-gray-800 transition-colors"
+                  disabled={submitting || !transactionForm.customer_username || !transactionForm.account_id}
+                  className="flex-1 px-4 py-2 bg-dark-bg text-white rounded-lg hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                  Tạo phiếu
+                  {submitting ? 'Đang xử lý...' : 'Tạo phiếu'}
                 </button>
               </div>
             </form>

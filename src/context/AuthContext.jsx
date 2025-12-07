@@ -13,50 +13,64 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check if user is already logged in
     const storedUser = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
+    const storedToken = localStorage.getItem('token');
 
-    if (storedUser && token) {
-      // Verify token is still valid
-      authAPI.verify(token)
-        .then(() => {
-          setUser(JSON.parse(storedUser));
-        })
-        .catch(() => {
-          // Token invalid, clear storage
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    console.log('[AuthContext] Initializing...', {
+      hasStoredUser: !!storedUser,
+      hasStoredToken: !!storedToken
+    });
+
+    if (storedUser && storedToken) {
+      console.log('[AuthContext] Restoring session from localStorage');
+      // Restore user session directly without verify (verify on first API call instead)
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        console.log('[AuthContext] Parsed user:', parsedUser);
+        setUser(parsedUser);
+        setToken(storedToken);
+        console.log('[AuthContext] Session restored successfully');
+      } catch (err) {
+        console.error('[AuthContext] Failed to parse stored user:', err);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
     } else {
-      setLoading(false);
+      console.log('[AuthContext] No stored credentials found');
     }
+    setLoading(false);
+    console.log('[AuthContext] Loading complete');
   }, []);
 
   const login = async (username, password) => {
     const response = await authAPI.login(username, password);
 
     const userInfo = response.user;
+    const userToken = response.token;
+
     setUser(userInfo);
+    setToken(userToken);
     localStorage.setItem('user', JSON.stringify(userInfo));
+    localStorage.setItem('token', userToken);
 
     return userInfo;
   };
 
   const logout = () => {
     setUser(null);
+    setToken(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
   };
 
   const value = {
     user,
+    token,
     login,
     logout,
     loading,

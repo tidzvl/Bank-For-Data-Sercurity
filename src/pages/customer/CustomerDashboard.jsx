@@ -10,7 +10,8 @@ import {
   MdVisibility,
   MdVisibilityOff,
   MdArrowUpward,
-  MdArrowDownward
+  MdArrowDownward,
+  MdInfo
 } from 'react-icons/md';
 import { useAuth } from '../../context/AuthContext';
 import { customerAPI } from '../../services/api';
@@ -36,7 +37,14 @@ export default function CustomerDashboard() {
         customerAPI.getTransactions()
       ]);
 
-      setAccounts(accountsData.accounts || []);
+      // Add account_number and account_type since API doesn't return them
+      const accountsWithExtra = (accountsData.accounts || []).map(acc => ({
+        ...acc,
+        account_number: `ACC${String(acc.id).padStart(12, '0')}`,
+        account_type: 'CHECKING'
+      }));
+
+      setAccounts(accountsWithExtra);
       setTransactions(transactionsData.transactions || []);
     } catch (err) {
       setError(err.message);
@@ -92,6 +100,21 @@ export default function CustomerDashboard() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto p-6">
+          {/* Info Banner */}
+          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <MdInfo size={24} className="text-blue-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-blue-900 mb-1">Hướng dẫn thực hiện giao dịch</h3>
+                <p className="text-sm text-blue-800">
+                  Để thực hiện <strong>nạp tiền</strong>, <strong>rút tiền</strong>, hoặc <strong>chuyển khoản</strong>,
+                  vui lòng liên hệ với nhân viên ngân hàng để được hỗ trợ.
+                  Bạn có thể xem lịch sử giao dịch và số dư tài khoản trong hệ thống.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Balance Card */}
           <div className="bg-gradient-to-br from-dark-bg to-gray-800 text-white rounded-2xl p-8 mb-6 shadow-lg">
             <div className="flex items-center justify-between mb-6">
@@ -116,16 +139,16 @@ export default function CustomerDashboard() {
             </div>
             <div className="flex gap-3">
               <Link
-                to="/customer/transactions/new"
+                to="/customer/accounts"
                 className="flex-1 bg-white text-dark-bg py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-center"
               >
-                Giao dịch mới
+                Xem tài khoản
               </Link>
               <Link
                 to="/customer/transactions"
                 className="flex-1 bg-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-600 transition-colors text-center"
               >
-                Lịch sử
+                Lịch sử GD
               </Link>
             </div>
           </div>

@@ -58,6 +58,22 @@ router.put('/approve/:id', async (req, res) => {
   try {
     connection = await getBankingConnection();
 
+    // Get transaction details before approval
+    const getTransSql = `
+      SELECT t.id, t.account_id, t.amount, t.type, a.balance as old_balance
+      FROM admin.transaction_log t
+      JOIN admin.account_balance a ON t.account_id = a.id
+      WHERE t.id = :id AND t.status = 'pending'
+    `;
+    const transResult = await executeQuery(connection, getTransSql, { id });
+
+    if (transResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy phiếu hoặc phiếu đã được xử lý' });
+    }
+
+    const trans = transResult.rows[0];
+    const oldBalance = trans.OLD_BALANCE;
+
     // Update status to 'accepted'
     // Trigger trg_update_balance will automatically update account balance
     const sql = `
@@ -72,9 +88,25 @@ router.put('/approve/:id', async (req, res) => {
       return res.status(404).json({ error: 'Không tìm thấy phiếu hoặc phiếu đã được xử lý' });
     }
 
+    // Get new balance after trigger execution
+    const getBalanceSql = `SELECT balance FROM admin.account_balance WHERE id = :account_id`;
+    const balanceResult = await executeQuery(connection, getBalanceSql, { account_id: trans.ACCOUNT_ID });
+    const newBalance = balanceResult.rows[0].BALANCE;
+
     res.json({
       success: true,
-      message: 'Duyệt giao dịch thành công. Số dư đã được cập nhật tự động.'
+      message: '✅ TRIGGER TỰ ĐỘNG: Duyệt giao dịch thành công. Số dư đã được cập nhật tự động!',
+      trigger_info: {
+        name: 'trg_update_balance',
+        type: 'AFTER UPDATE',
+        description: 'Trigger tự động cập nhật số dư tài khoản khi duyệt giao dịch',
+        action_performed: 'Tự động cập nhật số dư',
+        transaction_type: trans.TYPE,
+        amount: trans.AMOUNT,
+        old_balance: oldBalance,
+        new_balance: newBalance,
+        balance_change: newBalance - oldBalance
+      }
     });
 
   } catch (err) {
@@ -118,6 +150,90 @@ router.put('/reject/:id', async (req, res) => {
   }
 });
 
+// GET /api/director/customers - Get all customers
+router.get('/customers', async (req, res) => {
+  let connection;
+
+  try {
+    connection = await getBankingConnection();
+
+    const sql = `
+      SELECT
+        c.username,
+        c.fullname,
+        c.cccd,
+        c.phone,
+        COUNT(a.id) as account_count,
+        COUNT(CASE WHEN a.status = 'active' THEN 1 END) as active_account_count
+      FROM admin.customer_info c
+      LEFT JOIN admin.account_balance a ON c.username = a.username
+      GROUP BY c.username, c.fullname, c.cccd, c.phone
+      ORDER BY c.username
+    `;
+
+    const result = await executeQuery(connection, sql);
+
+    res.json({
+      success: true,
+      customers: result.rows.map(row => ({
+        username: row.USERNAME,
+        fullname: row.FULLNAME,
+        cccd: row.CCCD,
+        phone: row.PHONE,
+        accountCount: row.ACCOUNT_COUNT,
+        activeAccountCount: row.ACTIVE_ACCOUNT_COUNT
+      }))
+    });
+
+  } catch (err) {
+    console.error('Error fetching customers:', err);
+    res.status(500).json({ error: 'Không thể lấy danh sách khách hàng' });
+  } finally {
+    await closeConnection(connection);
+  }
+});
+
+// GET /api/director/accounts - Get all accounts
+router.get('/accounts', async (req, res) => {
+  let connection;
+
+  try {
+    connection = await getBankingConnection();
+
+    const sql = `
+      SELECT
+        a.id,
+        a.username,
+        a.balance,
+        a.status,
+        c.fullname
+      FROM admin.account_balance a
+      JOIN admin.customer_info c ON a.username = c.username
+      ORDER BY a.id DESC
+    `;
+
+    const result = await executeQuery(connection, sql);
+
+    res.json({
+      success: true,
+      accounts: result.rows.map(row => ({
+        id: row.ID,
+        account_number: `ACC${String(row.ID).padStart(12, '0')}`,
+        username: row.USERNAME,
+        fullname: row.FULLNAME,
+        balance: row.BALANCE,
+        status: row.STATUS
+      }))
+    });
+
+  } catch (err) {
+    console.error('Error fetching accounts:', err);
+    res.status(500).json({ error: 'Không thể lấy danh sách tài khoản' });
+  } finally {
+    await closeConnection(connection);
+  }
+});
+
 // GET /api/director/employees - Get all employees
 router.get('/employees', async (req, res) => {
   let connection;
@@ -139,7 +255,8 @@ router.get('/employees', async (req, res) => {
       employees: result.rows.map(row => ({
         username: row.EMP_USERNAME,
         salary: row.SALARY,
-        position: row.POSITION
+        position: row.POSITION,
+        status: 'active' // Default status - employees are assumed active
       }))
     });
 

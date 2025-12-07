@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   MdDashboard,
   MdBarChart,
@@ -17,9 +17,15 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Sidebar({ isOpen, onToggle }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout, isCustomer, isStaff, isDirector } = useAuth();
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   // Customer menu items
   const customerMenuItems = [
@@ -33,7 +39,7 @@ export default function Sidebar({ isOpen, onToggle }) {
   const staffMenuItems = [
     { path: '/staff/dashboard', icon: MdDashboard, label: 'Trang chủ' },
     { path: '/staff/customers', icon: MdPeople, label: 'Khách hàng' },
-    { path: '/staff/transactions', icon: MdAssignment, label: 'Giao dịch' },
+    { path: '/staff/transactions/new', icon: MdAssignment, label: 'Tạo giao dịch' },
     { path: '/staff/accounts', icon: MdAccountBalance, label: 'Tài khoản' }
   ];
 
@@ -119,7 +125,7 @@ export default function Sidebar({ isOpen, onToggle }) {
           {isOpen && <span>Cài đặt</span>}
         </Link>
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors text-left"
         >
           <MdLogout size={20} />

@@ -17,9 +17,17 @@ router.get('/customers', async (req, res) => {
     connection = await getBankingConnection();
 
     const sql = `
-      SELECT username, fullname, cccd, phone
-      FROM admin.customer_info
-      ORDER BY username
+      SELECT
+        c.username,
+        c.fullname,
+        c.cccd,
+        c.phone,
+        COUNT(a.id) as account_count,
+        COUNT(CASE WHEN a.status = 'active' THEN 1 END) as active_account_count
+      FROM admin.customer_info c
+      LEFT JOIN admin.account_balance a ON c.username = a.username
+      GROUP BY c.username, c.fullname, c.cccd, c.phone
+      ORDER BY c.username
     `;
 
     const result = await executeQuery(connection, sql);
@@ -30,13 +38,60 @@ router.get('/customers', async (req, res) => {
         username: row.USERNAME,
         fullname: row.FULLNAME,
         cccd: row.CCCD,
-        phone: row.PHONE
+        phone: row.PHONE,
+        accountCount: row.ACCOUNT_COUNT,
+        activeAccountCount: row.ACTIVE_ACCOUNT_COUNT
       }))
     });
 
   } catch (err) {
     console.error('Error fetching customers:', err);
     res.status(500).json({ error: 'Không thể lấy danh sách khách hàng' });
+  } finally {
+    await closeConnection(connection);
+  }
+});
+
+// GET /api/staff/customers/:username/accounts - Get all accounts for a specific customer
+router.get('/customers/:username/accounts', async (req, res) => {
+  const { username } = req.params;
+  let connection;
+
+  try {
+    connection = await getBankingConnection();
+
+    const sql = `
+      SELECT
+        a.id,
+        a.username,
+        a.balance,
+        a.status,
+        c.fullname
+      FROM admin.account_balance a
+      JOIN admin.customer_info c ON a.username = c.username
+      WHERE a.username = :username
+      ORDER BY a.id DESC
+    `;
+
+    const result = await executeQuery(connection, sql, { username });
+
+    res.json({
+      success: true,
+      accounts: result.rows.map(row => ({
+        id: row.ID,
+        account_number: `ACC${String(row.ID).padStart(12, '0')}`, // Generate account number from ID
+        username: row.USERNAME,
+        fullname: row.FULLNAME,
+        balance: row.BALANCE,
+        account_type: 'CHECKING', // Default type since not in schema
+        status: row.STATUS,
+        created_at: new Date().toISOString() // Default timestamp
+      }))
+    });
+
+  } catch (err) {
+    console.error('Error fetching customer accounts:', err);
+    res.status(500).json({ error: 'Không thể lấy danh sách tài khoản của khách hàng' });
   } finally {
     await closeConnection(connection);
   }
@@ -117,9 +172,11 @@ router.get('/accounts', async (req, res) => {
       success: true,
       accounts: result.rows.map(row => ({
         id: row.ID,
+        account_number: `ACC${String(row.ID).padStart(12, '0')}`,
         username: row.USERNAME,
         fullname: row.FULLNAME,
         balance: row.BALANCE,
+        account_type: 'CHECKING',
         status: row.STATUS
       }))
     });
@@ -249,7 +306,18 @@ router.post('/transactions', async (req, res) => {
   } catch (err) {
     console.error('Error creating transaction:', err);
     if (err.message.includes('ORA-20001')) {
-      return res.status(400).json({ error: 'Số dư tài khoản không đủ!' });
+      // Trigger trg_check_withdraw chặn giao dịch
+      return res.status(400).json({
+        error: '🚫 TRIGGER CHẶN: Số dư tài khoản không đủ!',
+        trigger_info: {
+          name: 'trg_check_withdraw',
+          type: 'BEFORE INSERT',
+          description: 'Trigger kiểm tra số dư trước khi tạo giao dịch rút tiền',
+          error_code: 'ORA-20001',
+          message: 'Trigger đã chặn giao dịch vì số dư không đủ để rút'
+        },
+        suggestion: 'Vui lòng kiểm tra lại số dư tài khoản và thử lại với số tiền nhỏ hơn.'
+      });
     }
     res.status(500).json({ error: 'Không thể tạo giao dịch' });
   } finally {
